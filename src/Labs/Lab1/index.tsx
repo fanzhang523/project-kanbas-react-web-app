@@ -277,7 +277,7 @@ export default function Lab1() {
             to get dummy text<br />
 
             Please
-            <a id="wd-github" href="https://github.com/">click here</a>
+            <a id="wd-github" href="https://github.com/fanzhang523/kanbas-react-web-app">click here</a>
             to go to github<br />
 
 
