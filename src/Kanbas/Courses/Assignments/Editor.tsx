@@ -1,41 +1,41 @@
+import React from 'react';
+import { useParams, Link } from "react-router-dom";
+import * as db from "../../Database";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+  const assignment = db.assignments.find(a => a._id === aid);
+
   return (
-    <div className="container" style={{ marginTop: '-260px', marginRight: '-200px'}}>
+    <div className="container" style={{ marginTop: '-280px', marginLeft: '300px' }}>
       <div className="row mb-3">
-        <div className="col-8">
+        <div className="col-12">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
-              <li className="breadcrumb-item"><a href="#">CS5610 SU1 24 MON/FRI</a></li>
-              <li className="breadcrumb-item active" aria-current="page">A1</li>
+              <li className="breadcrumb-item"><Link to={`/courses/${cid}`}>{cid}</Link></li>
+              <li className="breadcrumb-item active" aria-current="page">{assignment?.title ?? "Untitled Assignment"}</li>
             </ol>
           </nav>
         </div>
       </div>
       <div className="row mb-3">
-        <div className="col-8">
-          <h2>Assignment Name</h2>
-          <input type="text" className="form-control" value="A1" readOnly />
+        <div className="col-12">
+          <h2>{assignment?.title ?? "Untitled Assignment"}</h2>
+          <input type="text" className="form-control" value={assignment?.title ?? ""} readOnly />
         </div>
       </div>
       <div className="row mb-3">
-        <div className="col-8">
-          <p>The assignment is <a href="#" className="text-danger">available online</a></p>
-          <p>Submit a link to the landing page of your Web application running on Netlify. The landing page should include the following:</p>
-          <ul>
-            <li>Your full name and section</li>
-            <li>Links to each of the lab assignments</li>
-            <li>Link to the Kanban application</li>
-            <li>Links to all relevant source code repositories</li>
-          </ul>
-          <p>The Kanban application should include a link to navigate back to the landing page.</p>
+        <div className="col-12">
+          <p>Description: {assignment?.description ?? "No description provided."}</p>
         </div>
       </div>
       <div className="row mb-3">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Points</label>
           <input type="number" className="form-control" value="100" />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Assignment Group</label>
           <select className="form-control">
             <option>ASSIGNMENTS</option>
@@ -43,7 +43,7 @@ export default function AssignmentEditor() {
         </div>
       </div>
       <div className="row mb-3">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Display Grade as</label>
           <select className="form-control">
             <option>Percentage</option>
@@ -51,7 +51,7 @@ export default function AssignmentEditor() {
             <option>Letter</option>
           </select>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Submission Type</label>
           <select className="form-control">
             <option>Online</option>
@@ -60,7 +60,7 @@ export default function AssignmentEditor() {
         </div>
       </div>
       <div className="row mb-3">
-        <div className="col-8">
+        <div className="col-12">
           <label className="form-label">Online Entry Options</label>
           <div className="form-check">
             <input className="form-check-input" type="checkbox" value="" id="textEntry" />
@@ -95,32 +95,32 @@ export default function AssignmentEditor() {
         </div>
       </div>
       <div className="row mb-3">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Assign to</label>
           <select className="form-control">
             <option>Everyone</option>
             <option>Instructor</option>
           </select>
         </div>
-        <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Due</label>
           <input type="datetime-local" className="form-control" value="2024-05-13T23:59" />
         </div>
       </div>
       <div className="row mb-3">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Available from</label>
           <input type="datetime-local" className="form-control" value="2024-05-06T00:00" />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-6">
           <label className="form-label">Until</label>
           <input type="datetime-local" className="form-control" />
         </div>
       </div>
       <div className="row">
-        <div className="col-8">
-          <button className="btn btn-secondary me-2">Cancel</button>
-          <button className="btn btn-danger">Save</button>
+        <div className="col-12">
+          <Link to={`/courses/${cid}/Assignments`} className="btn btn-secondary me-2">Cancel</Link>
+          <Link to={`/courses/${cid}/Assignments`} className="btn btn-danger">Save</Link>
         </div>
       </div>
     </div>
