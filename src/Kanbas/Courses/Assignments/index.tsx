@@ -1,17 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BsGripVertical } from 'react-icons/bs';
+import { BsGripVertical, BsPlus } from 'react-icons/bs';
 import { FaSearch, FaPlus } from 'react-icons/fa';
 import { TfiAgenda } from "react-icons/tfi";
 import LessonControlButtons from '../Modules/LessonControlButtons';
 import ModuleControlButtons from '../Modules/ModuleControlButtons';
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { IoEllipsisVertical } from 'react-icons/io5';
+import { useDispatch, useSelector } from "react-redux";
+import AssignmentsControls from "./AssignmentsControls";
+import { addAssignment, editAssignment, updateAssignment, deleteAssignment } from "./reducer";
 import * as db from "../../Database";
 
+interface Assignment {
+  _id: string;
+  title: string;
+  description: string;
+  points: string;
+  dueDate: string;
+  availableFrom: string;
+  availableUntil: string;
+  course: string;
+  editing?: boolean;
+}
+
 export default function Assignments() {
-  const { cid } = useParams();
-  const assignments = db.assignments;
+  const { cid } = useParams<{ cid?: string }>();
+  const courseId = cid || ''; // Provide a fallback value
+
+  const [assignment, setAssignment] = useState<Assignment>({
+    _id: '',
+    title: "",
+    description: "",
+    points: "",
+    dueDate: "",
+    availableFrom: "",
+    availableUntil: "",
+    course: courseId,
+  });
+
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const dispatch = useDispatch();
+
+  const saveAssignment = () => {
+    dispatch(addAssignment({ ...assignment, _id: new Date().getTime().toString(), course: courseId }));
+    setAssignment({
+      _id: '',
+      title: "",
+      description: "",
+      points: "",
+      dueDate: "",
+      availableFrom: "",
+      availableUntil: "",
+      course: courseId,
+    });
+  };
 
   return (
     <div className="container" style={{ marginTop: '-280px', marginLeft: '180px' }}>
@@ -29,13 +73,15 @@ export default function Assignments() {
                   placeholder="Search for Assignments"
                 />
               </div>
-              <div>
+              <div className="d-flex align-items-center">
                 <button className="btn btn-outline-secondary me-2">
                   <FaPlus /> Group
                 </button>
-                <button className="btn btn-danger">
-                  <FaPlus /> Assignment
-                </button>
+                <AssignmentsControls
+                  assignment={assignment}
+                  setAssignment={setAssignment}
+                  saveAssignment={saveAssignment}
+                />
               </div>
             </div>
 
@@ -47,12 +93,13 @@ export default function Assignments() {
                     <span className="fw-bold">ASSIGNMENTS</span>
                   </div>
                   <span className="badge bg-light text-dark border border-dark rounded-pill ms-auto me-2 px-3 py-1">40% of Total</span>
-                  <ModuleControlButtons />
+                  <BsPlus className="fs-2" />
+                  <IoEllipsisVertical className="fs-4" />
                 </div>
                 <ul className="wd-lessons list-group rounded-0">
                   {assignments
-                    .filter((assignment) => assignment.course === cid)
-                    .map((assignment) => (
+                    .filter((assignment: Assignment) => assignment.course === courseId)
+                    .map((assignment: Assignment) => (
                       <li key={assignment._id} className="wd-lesson list-group-item p-0 border-0 border-start border-success border-3 mb-0">
                         <div className="d-flex align-items-center p-3 ps-1">
                           <BsGripVertical className="me-2 fs-3" />
@@ -61,12 +108,33 @@ export default function Assignments() {
                             <div className="d-flex justify-content-between align-items-center">
                               <Link
                                 id={`wd-${assignment._id}-link`}
-                                to={`/Kanbas/courses/${cid}/Assignments/${assignment._id}`}
+                                to={`/Kanbas/courses/${courseId}/Assignments/${assignment._id}`}
                                 className="btn btn-link p-0 fw-bold text-decoration-none"
                               >
                                 {assignment.title}
                               </Link>
-                              <LessonControlButtons />
+                              {!assignment.editing }
+                              {assignment.editing && (
+                                <input
+                                  className="form-control w-50 d-inline-block"
+                                  onChange={(e) => dispatch(
+                                    updateAssignment({ ...assignment, title: e.target.value })
+                                  )}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      dispatch(updateAssignment({ ...assignment, editing: false }));
+                                    }
+                                  }}
+                                  value={assignment.title}
+                                />
+                              )}
+                              <ModuleControlButtons
+                                moduleId={assignment._id}
+                                deleteModule={(assignmentId) => {
+                                  dispatch(deleteAssignment(assignmentId));
+                                }}
+                                editModule={(assignmentId) => dispatch(editAssignment(assignmentId))}
+                              />
                             </div>
                             <p className="mb-0">
                               <span className="text-danger">Multiple Modules</span> | Not available until May 6 at 12:00am | Due May 13 at 11:59pm | 100pts
