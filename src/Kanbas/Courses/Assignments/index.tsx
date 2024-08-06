@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BsGripVertical, BsPlus } from 'react-icons/bs';
 import { FaSearch, FaPlus } from 'react-icons/fa';
@@ -10,8 +9,11 @@ import { Link } from "react-router-dom";
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { useDispatch, useSelector } from "react-redux";
 import AssignmentsControls from "./AssignmentsControls";
-import { addAssignment, editAssignment, updateAssignment, deleteAssignment } from "./reducer";
+import { setAssignments, addAssignment, editAssignment, updateAssignment, deleteAssignment } from "./reducer";
 import * as db from "../../Database";
+import { useState, useEffect } from "react";
+import * as client from "./client";
+
 
 interface Assignment {
   _id: string;
@@ -43,19 +45,52 @@ export default function Assignments() {
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
 
-  const saveAssignment = () => {
-    dispatch(addAssignment({ ...assignment, _id: new Date().getTime().toString(), course: courseId }));
-    setAssignment({
-      _id: '',
-      title: "",
-      description: "",
-      points: "",
-      dueDate: "",
-      availableFrom: "",
-      availableUntil: "",
-      course: courseId,
-    });
+  const removeAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
   };
+
+
+  const createAssignment = async (assignment: any) => {
+    const newAssignment = await client.createAssignment(cid as string, assignment);
+    dispatch(addAssignment(newAssignment));
+  };
+
+
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
+
+  const saveAssignment = async (assignment: any) => {
+    try {
+        console.log('Attempting to save assignment:', assignment); // Log assignment details
+        const updatedAssignment = await client.updateAssignment(assignment);
+        console.log('Assignment successfully updated:', updatedAssignment); // Log success
+
+        dispatch(updateAssignment(updatedAssignment));
+        setAssignment({
+            _id: '',
+            title: "",
+            description: "",
+            points: "",
+            dueDate: "",
+            availableFrom: "",
+            availableUntil: "",
+            course: courseId,
+        });
+    } catch (error: any) {
+        console.error('Error saving assignment:', error.response ? error.response.data : error.message);
+        alert('Failed to save assignment. Please try again.');
+    }
+};
+
+
+  
 
   return (
     <div className="container" style={{ marginTop: '-280px', marginLeft: '180px' }}>
@@ -80,7 +115,7 @@ export default function Assignments() {
                 <AssignmentsControls
                   assignment={assignment}
                   setAssignment={setAssignment}
-                  saveAssignment={saveAssignment}
+                  saveAssignment={() => saveAssignment(assignment)}
                 />
               </div>
             </div>
@@ -122,7 +157,7 @@ export default function Assignments() {
                                   )}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") {
-                                      dispatch(updateAssignment({ ...assignment, editing: false }));
+                                      updateAssignment({ ...assignment, editing: false });
                                     }
                                   }}
                                   value={assignment.title}
@@ -131,7 +166,7 @@ export default function Assignments() {
                               <ModuleControlButtons
                                 moduleId={assignment._id}
                                 deleteModule={(assignmentId) => {
-                                  dispatch(deleteAssignment(assignmentId));
+                                  removeAssignment(assignmentId);
                                 }}
                                 editModule={(assignmentId) => dispatch(editAssignment(assignmentId))}
                               />
