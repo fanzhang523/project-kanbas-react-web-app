@@ -5,7 +5,7 @@ import "./index.css";
 export default function CoursesNavigation() {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
-  const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades"];
+  const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades", "People"];
 
 
   return (
@@ -24,6 +24,8 @@ export default function CoursesNavigation() {
          className="list-group-item text-danger border border-0" style={{ width: '80%' }}> Quizzes </a>
       <a id="wd-course-grades-link" href={`#/Kanbas/Courses/${course?._id}/Grades`}
          className="list-group-item text-danger border border-0" style={{ width: '80%' }}> Grades </a>
+      <a id="wd-course-people-link" href={`#/Kanbas/Courses/${course?._id}/People`}
+         className="list-group-item text-danger border border-0" style={{ width: '80%' }}> People </a>
     </div>
   );
 }

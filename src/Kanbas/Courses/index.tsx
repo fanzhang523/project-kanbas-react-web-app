@@ -6,6 +6,7 @@ import Grades from "./Grades";
 import Home from "./Home";
 import Modules from "./Modules";
 import CoursesNavigation from "./Navigation";
+import PeopleTable from "./People/Table";
 
 
 export default function Courses({ courses }: { courses: any[]; }) {
@@ -25,11 +26,13 @@ export default function Courses({ courses }: { courses: any[]; }) {
           <div>
             <div className="flex-fill">
               <Routes>
-                <Route path="Home" element={<Home />} />
-                <Route path="Modules" element={<Modules />} />
-                <Route path="Assignments" element={<Assignments />} />
-                <Route path="Assignments/:aid" element={<AssignmentEditor />} />
-                <Route path="Grades" element={<Grades />} />
+                <Route path="/Home" element={<Home />} />
+                <Route path="/Modules" element={<Modules />} />
+                <Route path="/Assignments" element={<Assignments />} />
+                <Route path="/Assignments/:aid" element={<AssignmentEditor />} />
+                <Route path="/Grades" element={<Grades />} />
+                <Route path="/People" element={<PeopleTable />} />
+                <Route path="/People/:uid" element={<PeopleTable />} />
               </Routes>
             </div>
           </div>

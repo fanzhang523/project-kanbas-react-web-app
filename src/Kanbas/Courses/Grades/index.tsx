@@ -19,7 +19,7 @@ export default function Grades() {
   };
 
   const getUserName = (userId: string): string => {
-    const user = users.find(u => u._id === userId);
+    const user = users.find(u => u.loginId === userId);
     return user ? `${user.firstName} ${user.lastName}` : 'Unknown User';
   };
 
