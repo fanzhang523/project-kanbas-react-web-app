@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 import { setQuizzes, addQuizzes, deleteQuizzes, updateQuizzes } from './reducer';
-import quizzesData from '/Users/admin/2024/summer/webdev/kanbas-react-web-app/src/Kanbas/Database/quizzes.json';
+import quizzesData from '../../Database/quizzes.json';
 import { FaSearch, FaEllipsisV, FaPlus, FaTrash, FaCheckCircle, FaCopy, FaSort } from 'react-icons/fa';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
 
