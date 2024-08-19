@@ -93,7 +93,7 @@ export default function Assignments() {
   
 
   return (
-    <div className="container" style={{ marginTop: '-280px', marginLeft: '180px' }}>
+    <div className="container" >
       <div className="row justify-content-end">
         <div className="col-md-12">
           <div id="wd-assignments" className="p-3">

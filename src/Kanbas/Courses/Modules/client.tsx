@@ -9,18 +9,29 @@ export const deleteModule = async (moduleId: string) => {
 };
 
 export const createModule = async (courseId: string, module: any) => {
-    const response = await axios.post( `${COURSES_API}/${courseId}/modules`, module );
-    return response.data;
-  };
-  
-export const updateModule = async (module: any) => {
-    const response = await axios.
-      put(`${MODULES_API}/${module._id}`, module);
-    return response.data;
-  };
-  
-export const findModulesForCourse = async (courseId: string) => {
-  const response = await axios
-    .get(`${COURSES_API}/${courseId}/modules`);
+  const response = await axios.post(`${COURSES_API}/${courseId}/modules`, module);
   return response.data;
+};
+
+export const updateModule = async (module: any) => {
+  const response = await axios.
+    put(`${MODULES_API}/${module._id}`, module);
+  return response.data;
+};
+
+export const findModulesForCourse = async (courseId: string) => {
+  try {
+    const response = await axios.get(`${COURSES_API}/${courseId}/modules`);
+
+    
+    if (response && response.data) {
+      return response.data;
+    } else {
+      console.log('Response data is undefined, returning empty array.');
+      return [];
+    }
+  } catch (error) {
+    console.log('Error fetching modules for course, returning empty array.');
+    return [];
+  }
 };

@@ -1,0 +1,32 @@
+.quiz-details-container {
+    padding: 20px;
+  }
+  
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .quiz-header h2 {
+    font-size: 24px;
+  }
+  
+  .quiz-details {
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+  }
+  
+  .quiz-property {
+    margin-bottom: 10px;
+  }
+  
+  .quiz-dates {
+    margin-top: 20px;
+  }
+  
+  .quiz-date {
+    margin-bottom: 5px;
+  }
+  

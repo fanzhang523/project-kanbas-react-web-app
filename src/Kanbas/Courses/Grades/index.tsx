@@ -24,7 +24,7 @@ export default function Grades() {
   };
 
   return (
-    <div className="container" style={{ maxWidth: '900px', marginTop: '-280px', marginLeft: '200px' }}>
+    <div className="container" >
       <div className="d-flex justify-content-end align-items-center mb-3">
         <div className="d-flex">
           <button className="btn btn-outline-secondary me-2">
